@@ -1,0 +1,62 @@
+
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.io import loadmat, whosmat
+
+#clase para CSV (SIATA) 
+class ArchivoSIATA:
+    def __init__(self, ruta):
+        self.data = pd.read_csv(ruta)
+        print("Archivo CSV cargado correctamente.")
+    
+    #informa y describe
+    def info_basica(self):
+        print("Información básica:")
+        print(self.data.info())
+        print("\nDescripción estadística:")
+        print(self.data.describe())
+
+    #SUBPLOTS
+    def graficos(self, columna):
+        fig, axs = plt.subplots(3, 1, figsize=(8, 10))
+
+        self.data[columna].plot(ax=axs[0], title="Plot")
+        self.data.boxplot(column=columna, ax=axs[1])
+        self.data[columna].hist(ax=axs[2])
+
+        plt.tight_layout()
+        plt.savefig("graficos/siata_graficos.png")
+        plt.show()
+
+    #operaciones 
+    def operaciones(self, col1, col2):
+        self.data[col1+"_apply"] = self.data[col1].apply(lambda x: x*2)
+        self.data[col1+"_map"] = self.data[col1].map(lambda x: x + 10)
+        self.data["suma"] = self.data[col1] + self.data[col2]
+        print("Operaciones realizadas")
+
+    #remuestreo
+    def remuestreo(self, col_fecha, col_valor): 
+        self.data[col_fecha] = pd.to_datetime(self.data[col_fecha])
+        self.data.set_index(col_fecha, inplace=True)
+        
+        diario = self.data[col_valor].resample('D').mean()
+        mensual= self.data[col_valor].resample('M').mean()
+        trimestral = self.data[col_valor].resample('Q').mean()
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(diario, label ="Diario")
+        plt.plot(mensual, label="Mensual")
+        plt.plot(trimestral, label="Trimestral")
+
+        plt.legend()
+        plt.title("Remuestreo")
+        plt,xlabel("Fecha")
+        plt.ylabel("Valor")
+        plt.savefig("graficos/remuestreo.png")
+        plt.show()
+
+#Clase para EEG (.MAT)
+
+        
