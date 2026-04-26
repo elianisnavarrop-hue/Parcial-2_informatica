@@ -42,9 +42,30 @@ def menu():
             ruta = input("Ingrese la ruta del archivo EEG (.MAT): ")
             eeg = ArchivoEEG(ruta)
 
-            pass # Aquí se agregarían opciones para trabajar con el archivo EEG
+            eeg.ver_llaves()
 
+            while True: 
+                print("\nOpciones para EEG:")
+                print("1. Sumar canales")
+                print("2. Estadísticas")
+                print("3. Volver al menú principal")
 
+                op3 = input("Ingrese el número de la opción: ")
+
+                if op3 == "1":
+                    key = input("Nobre variable: ")
+                    c1 = int(input("Canal 1: "))
+                    c2 = int(input("Canal 2: "))
+                    c3 = int(input("Canal 3: "))
+                    inicio = int(input("Inicio: "))
+                    fin = int(input("Fin: "))
+                    eeg.sumar_canales(key, c1, c2, c3, inicio, fin)
+                elif op3 == "2":
+                    key = input("Nobre variable: ")
+                    eeg.estadisticas(key)
+                elif op3 == "3":
+                    break
+      
         elif opcion == "3":
             print("Saliendo del programa.")
             break
