@@ -3,7 +3,7 @@ from clases import ArchivoSIATA, ArchivoEEG
 def menu():
     while True:
         print("Seleccione una opción:")
-        print("1. Trabajar con archico CSV (SIATA)")
+        print("1. Trabajar con archivo CSV (SIATA)")
         print("2. Trabajar con archivo EEG (.MAT)")
         print("3. Salir")
 
@@ -25,12 +25,17 @@ def menu():
                 if op2 == "1":
                     siata.info_basica()
                 elif op2 == "2":
+                    print("Columnas disponibles:")
+                    print(siata.data.columns)
                     col = input("Ingrese la columna: ")
-                    siata.graficos(col)
+                    if siata.validar_columna(col):
+                        siata.graficos(col)
                 elif op2 == "3":
-                    c1 = input("Ingrese el nombre de la primera columna: ")
-                    c2 = input("Ingrese el nombre de la segunda columna: ")
-                    siata.operaciones(c1, c2)
+                    print(siata.data.columns)
+                    c1 = input("Ingrese el nombre de la columna 1: ")
+                    c2 = input("Ingrese el nombre de la columna 2: ")
+                    if siata.validar_columna(c1) and siata.validar_columna(c2):
+                        siata.operaciones(c1, c2)
                 elif op2 == "4":
                     fecha = input("Ingrese la columna de fecha: ")
                     valor = input("Ingrese la columna de valor: ")
@@ -53,7 +58,7 @@ def menu():
                 op3 = input("Ingrese el número de la opción: ")
 
                 if op3 == "1":
-                    key = input("Nobre variable: ")
+                    key = input("Nombre variable: ")
                     c1 = int(input("Canal 1: "))
                     c2 = int(input("Canal 2: "))
                     c3 = int(input("Canal 3: "))
@@ -61,7 +66,7 @@ def menu():
                     fin = int(input("Fin: "))
                     eeg.sumar_canales(key, c1, c2, c3, inicio, fin)
                 elif op3 == "2":
-                    key = input("Nobre variable: ")
+                    key = input("Nombre variable: ")
                     eeg.estadisticas(key)
                 elif op3 == "3":
                     break

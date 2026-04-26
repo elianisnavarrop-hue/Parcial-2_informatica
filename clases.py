@@ -17,6 +17,12 @@ class ArchivoSIATA:
         print("\nDescripción estadística:")
         print(self.data.describe())
 
+    def validar_columna(self, col):
+        if col not in self.data.columns:
+            print(f"Columna no encontrada.")
+            return False
+        return True
+
     #SUBPLOTS
     def graficos(self, columna):
         fig, axs = plt.subplots(3, 1, figsize=(8, 10))
@@ -52,7 +58,7 @@ class ArchivoSIATA:
 
         plt.legend()
         plt.title("Remuestreo")
-        plt,xlabel("Fecha")
+        plt.xlabel("Fecha")
         plt.ylabel("Valor")
         plt.savefig("graficos/remuestreo.png")
         plt.show()
@@ -64,6 +70,12 @@ class ArchivoEEG:
         self.data = loadmat(ruta)
         self.ruta = ruta
         print("Archivo EEG (.MAT) cargado correctamente.")
+
+    def validar_columna(self, col):
+        if col not in self.data.columns:
+            print(f"Columna  no encontrada .")
+            return False
+        return True
 
         #ver variables
     def ver_llaves(self):
@@ -89,11 +101,11 @@ class ArchivoEEG:
 
         axs[1].plot(tiempo, suma, label ="Suma", color="red")
         axs[1].set_title("Suma de canales")
-        axs[1].set_xlabel("Segundos")
-        axs[1].set_ylabel("Microvoltios")
+        axs[1].set_xlabel("Tiempo (Segundos)")
+        axs[1].set_ylabel("Voltaje(Microvoltios)")
 
         plt.tight_layout()
-        plt.savefig("graficos/egg_suma.png")
+        plt.savefig("graficos/eeg_suma.png")
         plt.show()
 
     #Promedio y desviación 
@@ -101,19 +113,24 @@ class ArchivoEEG:
         señal = self.data[Key]
         señal = np.squeeze(señal)
 
-        promedio = np.mean(señal, axis=0)
-        desviacion = np.std(señal, axis=0)
+        promedio = np.mean(señal, axis=(0,2))
+        desviacion = np.std(señal, axis=(0,2))
 
         fig, axs = plt.subplots(2, 1)
 
         axs[0].stem(promedio) 
         axs[0].set_title("Promedio")
+        axs[0].set_xlabel("Muestras")
+        axs[0].set_ylabel("Voltaje (Microvoltios)")
 
         axs[1].stem(desviacion)
         axs[1].set_title("Desviación estándar")
+        axs[1].set_xlabel("Muestras")
+        axs[1].set_ylabel("Voltaje (Microvoltios)")
         plt.tight_layout()
+        plt.savefig("graficos/eeg_estadisticas.png")
         plt.show()
-        
+
         
 
         
