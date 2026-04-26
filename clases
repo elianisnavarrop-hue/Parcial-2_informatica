@@ -59,4 +59,61 @@ class ArchivoSIATA:
 
 #Clase para EEG (.MAT)
 
+class ArchivoEEG:
+    def __init__(self, ruta):
+        self.data = loadmat(ruta)
+        self.ruta = ruta
+        print("Archivo EEG (.MAT) cargado correctamente.")
+
+        #ver variables
+    def ver_llaves(self):
+        print(whosmat(self.ruta))
+
+        #suma de canales
+    def sumar_canales(self, key, c1, c2, c3, inicio, fin):
+        señal = self.data[key]
+
+        #convertir a 2D si es necesario
+        señal = np.squeeze(señal)
+        suma = señal[c1, inicio:fin] + señal[c2, inicio:fin] + señal[c3, inicio:fin]
+        tiempo = np.arange(inicio, fin) / 1000   # Asumiendo una frecuencia de muestreo de 1000 Hz
+
+        fig, axs = plt.subplots(2, 1, figsize=(8, 6))
+
+        axs[0].plot(tiempo, señal[c1, inicio:fin], label="Canal 1")
+        axs[0].plot(tiempo, señal[c2, inicio:fin], label="Canal 2")
+        axs[0].plot(tiempo, señal[c3, inicio:fin], label="Canal 3")
+        axs[0].set_title("canales EEG")
+        axs[0].set_ylabel("Microvoltios")
+        axs[0].legend()
+
+        axs[1].plot(tiempo, suma, label ="Suma", color="red")
+        axs[1].set_title("Suma de canales")
+        axs[1].set_xlabel("Segundos")
+        axs[1].set_ylabel("Microvoltios")
+
+        plt.tight_layout()
+        plt.savefig("graficos/egg_suma.png")
+        plt.show()
+
+    #Promedio y desviación 
+    def estadisticas(self, Key): 
+        señal = self.data[Key]
+        señal = np.squeeze(señal)
+
+        promedio = np.mean(señal, axis=0)
+        desviacion = np.std(señal, axis=0)
+
+        fig, axs = plt.subplots(2, 1)
+
+        axs[0].stem(promedio) 
+        axs[0].set_title("Promedio")
+
+        axs[1].stem(desviacion)
+        axs[1].set_title("Desviación estándar")
+        plt.tight_layout()
+        plt.show()
+        
+        
+
         
